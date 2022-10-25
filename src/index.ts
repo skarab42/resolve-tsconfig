@@ -30,10 +30,11 @@ function findFileUp(
   return findFileUp(parentPath, stopDirectory, callback);
 }
 
-type Options = {
+export type Options = {
   startDirectory?: string | undefined;
   stopDirectory?: string | undefined;
   startDirectoryShouldExists?: boolean | undefined;
+  compilerOptions?: ts.CompilerOptions | undefined;
 };
 
 type NormalizedOptions = {
@@ -79,4 +80,67 @@ export function findConfigFile(filePath = 'tsconfig.json', options: Options = {}
 
     return ts.sys.fileExists(filePath) ? filePath : undefined;
   });
+}
+
+type DiagnosticMessage = {
+  message: string;
+  code?: number;
+  category?: ts.DiagnosticCategory;
+};
+
+function createDiagnostic(message: DiagnosticMessage): ts.Diagnostic {
+  return {
+    messageText: message.message,
+    code: message.code === undefined ? -0 : message.code,
+    category: message.category ?? ts.DiagnosticCategory.Error,
+    file: undefined,
+    start: undefined,
+    length: undefined,
+  };
+}
+
+type LoadedConfig =
+  | { diagnostics: ts.Diagnostic[]; config?: never }
+  | { config: ts.ParsedCommandLine; diagnostics?: never };
+
+export function resolveTSConfig(filePath = 'tsconfig.json', options: Options = {}): LoadedConfig {
+  try {
+    const configFilePath = findConfigFile(filePath, options);
+
+    if (!configFilePath) {
+      return {
+        diagnostics: [createDiagnostic({ message: `Cannot find a '${filePath}' file.` })],
+      };
+    }
+
+    const jsonText = ts.sys.readFile(configFilePath);
+
+    if (!jsonText) {
+      return {
+        diagnostics: [createDiagnostic({ message: `Cannot read '${configFilePath}' file.` })],
+      };
+    }
+
+    const configObject = ts.parseConfigFileTextToJson(configFilePath, jsonText);
+
+    if (configObject.error) {
+      return { diagnostics: [configObject.error] };
+    }
+
+    const parsedCommandLine = ts.parseJsonConfigFileContent(
+      configObject.config,
+      ts.sys,
+      path.dirname(configFilePath),
+      options.compilerOptions,
+      configFilePath,
+    );
+
+    if (parsedCommandLine.errors.length > 0) {
+      return { diagnostics: parsedCommandLine.errors };
+    }
+
+    return { config: parsedCommandLine };
+  } catch (error) {
+    return { diagnostics: [createDiagnostic({ message: (error as Error).message })] };
+  }
 }
