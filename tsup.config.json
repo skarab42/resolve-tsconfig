@@ -1,0 +1,12 @@
+{
+  "tsconfig": "./tsconfig.build.json",
+  "entry": ["src/index.ts"],
+  "format": ["esm", "cjs"],
+  "platform": "node",
+  "outDir": "lib",
+  "clean": true,
+  "shims": true,
+  "legacyOutput": true,
+  "sourcemap": true,
+  "dts": true
+}
