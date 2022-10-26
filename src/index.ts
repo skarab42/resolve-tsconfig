@@ -82,8 +82,8 @@ function normalizeInput(filePath: string, options: Options): NormalizedOptions |
  * @param options See {@link Options}.
  * @returns The config file path or `undefined`.
  */
-export function findConfigFile(filePath = 'tsconfig.json', options: Options = {}): string | undefined {
-  const { fileName, startDirectory, stopDirectory } = normalizeInput(filePath, options);
+export function findConfigFile(filePath = 'tsconfig.json', options?: Options): string | undefined {
+  const { fileName, startDirectory, stopDirectory } = normalizeInput(filePath, options ?? {});
 
   return findFileUp(startDirectory, stopDirectory, (directory) => {
     const filePath = `${directory}/${fileName}`;
@@ -120,7 +120,7 @@ type LoadedConfig =
  * @param options See {@link Options}.
  * @returns The resolved config or an array of diagnostics.
  */
-export function resolveTSConfig(filePath = 'tsconfig.json', options: Options = {}): LoadedConfig {
+export function resolveTSConfig(filePath = 'tsconfig.json', options?: Options): LoadedConfig {
   try {
     const configFilePath = findConfigFile(filePath, options);
 
@@ -148,7 +148,7 @@ export function resolveTSConfig(filePath = 'tsconfig.json', options: Options = {
       configObject.config,
       ts.sys,
       path.dirname(configFilePath),
-      options.compilerOptions,
+      options?.compilerOptions,
       configFilePath,
     );
 
