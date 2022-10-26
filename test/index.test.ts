@@ -106,3 +106,45 @@ it('should return diagnostics if config file has invalid properties', () => {
   expect(diagnostics?.[0]?.category).toBe(1);
   expect(diagnostics?.[0]?.messageText).toBe(`Compiler option 'strict' requires a value of type boolean.`);
 });
+
+it('should return diagnostics if config file has no files or include properties and cannot find source files in current working directory', () => {
+  const filePath = 'test/fixtures/config/no-source/tsconfig.no-files-or-include.json';
+  const { config, diagnostics } = resolveTSConfig(filePath);
+
+  expect(config).toBeUndefined();
+  expect(diagnostics?.[0]?.category).toBe(1);
+  expect(diagnostics?.[0]?.messageText).toBe(
+    `No inputs were found in config file '${cwd}/${filePath}'. Specified 'include' paths were '["**/*"]' and 'exclude' paths were '[]'.`,
+  );
+});
+
+it('should return the config if config file has no files or include properties but we can find source files in current working directory', () => {
+  const { config } = resolveTSConfig('test/fixtures/config/source/tsconfig.no-files-or-include.json');
+
+  expect(config).toBeDefined();
+
+  if (!config) {
+    return;
+  }
+
+  expect(config.errors.length).toBe(0);
+  expect(config.fileNames.length).toBe(2);
+  expect(config.fileNames[0]).toMatch('src/module-a.ts');
+  expect(config.fileNames[1]).toMatch('src/module-b.ts');
+  expect((config.raw as Record<string, unknown>)['extends']).toBe(undefined);
+});
+
+it('should return the config from extended config', () => {
+  const { config } = resolveTSConfig('test/fixtures/config/source/tsconfig.extends.json');
+
+  expect(config).toBeDefined();
+
+  if (!config) {
+    return;
+  }
+
+  expect(config.errors.length).toBe(0);
+  expect(config.fileNames.length).toBe(1);
+  expect(config.fileNames[0]).toMatch('src/module-b.ts');
+  expect((config.raw as Record<string, unknown>)['extends']).toBe('./tsconfig.json');
+});

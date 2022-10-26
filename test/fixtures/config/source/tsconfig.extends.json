@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["src/module-a.ts"],
+  "compilerOptions": {
+    "strict": true
+  }
+}
