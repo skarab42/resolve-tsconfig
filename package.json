@@ -14,7 +14,6 @@
   "bugs": "https://github.com/skarab42/resolve-tsconfig/issues",
   "funding": "https://github.com/sponsors/skarab42",
   "license": "MIT",
-  "type": "module",
   "main": "./lib/index.js",
   "module": "./lib/esm/index.js",
   "types": "./lib/index.d.ts",
