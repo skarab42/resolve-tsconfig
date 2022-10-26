@@ -64,19 +64,19 @@ it(`should resolve root config`, () => {
 });
 
 it(`should return diagnostics on not found file`, () => {
-  const { config, diagnostics } = resolveTSConfig('test/fixtures/config/not-exists.json');
+  const { config, diagnostics } = resolveTSConfig('test/fixtures/not-exists.json');
 
   expect(config).toBeUndefined();
   expect(diagnostics?.[0]?.category).toBe(1);
-  expect(diagnostics?.[0]?.messageText).toBe(`Cannot find a 'test/fixtures/config/not-exists.json' file.`);
+  expect(diagnostics?.[0]?.messageText).toBe(`Cannot find a 'test/fixtures/not-exists.json' file.`);
 });
 
 it(`should return diagnostics on empty file`, () => {
-  const { config, diagnostics } = resolveTSConfig('test/fixtures/config/tsconfig.empty.json');
+  const { config, diagnostics } = resolveTSConfig('test/fixtures/tsconfig.empty.json');
 
   expect(config).toBeUndefined();
   expect(diagnostics?.[0]?.category).toBe(1);
-  expect(diagnostics?.[0]?.messageText).toBe(`Cannot read '${cwd}/test/fixtures/config/tsconfig.empty.json' file.`);
+  expect(diagnostics?.[0]?.messageText).toBe(`Cannot read '${cwd}/test/fixtures/tsconfig.empty.json' file.`);
 });
 
 it(`should return diagnostics on empty file`, () => {
@@ -92,7 +92,7 @@ it(`should return diagnostics on empty file`, () => {
 });
 
 it('should return diagnostics if config file is not a valid JSON file', () => {
-  const { config, diagnostics } = resolveTSConfig('test/fixtures/config/tsconfig.invalid-format.json');
+  const { config, diagnostics } = resolveTSConfig('test/fixtures/tsconfig.invalid-format.json');
 
   expect(config).toBeUndefined();
   expect(diagnostics?.[0]?.category).toBe(1);
@@ -100,7 +100,7 @@ it('should return diagnostics if config file is not a valid JSON file', () => {
 });
 
 it('should return diagnostics if config file has invalid properties', () => {
-  const { config, diagnostics } = resolveTSConfig('test/fixtures/config/tsconfig.invalid-property.json');
+  const { config, diagnostics } = resolveTSConfig('test/fixtures/tsconfig.invalid-property.json');
 
   expect(config).toBeUndefined();
   expect(diagnostics?.[0]?.category).toBe(1);
@@ -108,7 +108,7 @@ it('should return diagnostics if config file has invalid properties', () => {
 });
 
 it('should return diagnostics if config file has no files or include properties and cannot find source files in current working directory', () => {
-  const filePath = 'test/fixtures/config/no-source/tsconfig.no-files-or-include.json';
+  const filePath = 'test/fixtures/no-source-files/tsconfig.no-files-or-include.json';
   const { config, diagnostics } = resolveTSConfig(filePath);
 
   expect(config).toBeUndefined();
@@ -119,7 +119,7 @@ it('should return diagnostics if config file has no files or include properties 
 });
 
 it('should return the config if config file has no files or include properties but we can find source files in current working directory', () => {
-  const { config } = resolveTSConfig('test/fixtures/config/source/tsconfig.no-files-or-include.json');
+  const { config } = resolveTSConfig('test/fixtures/with-source-files/tsconfig.no-files-or-include.json');
 
   expect(config).toBeDefined();
 
@@ -135,7 +135,7 @@ it('should return the config if config file has no files or include properties b
 });
 
 it('should return the config from extended config', () => {
-  const { config } = resolveTSConfig('test/fixtures/config/source/tsconfig.extends.json');
+  const { config } = resolveTSConfig('test/fixtures/with-source-files/tsconfig.extends.json');
 
   expect(config).toBeDefined();
 
