@@ -1,7 +1,7 @@
 {
   "name": "resolve-tsconfig",
   "version": "0.0.0-development",
-  "description": "Scaffolded with @skarab/skaffold",
+  "description": "Find and resolve a tsconfig with some options.",
   "author": {
     "name": "skarab42",
     "email": "skarab@bluewin.ch"
@@ -54,5 +54,10 @@
     "pnpm": ">=7"
   },
   "packageManager": "pnpm@7.11.0",
-  "keywords": []
+  "keywords": [
+    "typescript",
+    "tsconfig",
+    "config",
+    "diagnostics"
+  ]
 }

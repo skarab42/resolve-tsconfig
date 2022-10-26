@@ -30,6 +30,9 @@ function findFileUp(
   return findFileUp(parentPath, stopDirectory, callback);
 }
 
+/**
+ * The {@link resolveTSConfig} Options.
+ */
 export type Options = {
   startDirectory?: string | undefined;
   stopDirectory?: string | undefined;
@@ -72,6 +75,13 @@ function normalizeInput(filePath: string, options: Options): NormalizedOptions |
   };
 }
 
+/**
+ * Find a config file with some options.
+ *
+ * @param filePath An absolute or relative file path.
+ * @param options See {@link Options}.
+ * @returns The config file path or `undefined`.
+ */
 export function findConfigFile(filePath = 'tsconfig.json', options: Options = {}): string | undefined {
   const { fileName, startDirectory, stopDirectory } = normalizeInput(filePath, options);
 
@@ -103,6 +113,13 @@ type LoadedConfig =
   | { diagnostics: ts.Diagnostic[]; config?: never }
   | { config: ts.ParsedCommandLine; diagnostics?: never };
 
+/**
+ * Find and resolve a tsconfig with some options.
+ *
+ * @param filePath An absolute or relative file path.
+ * @param options See {@link Options}.
+ * @returns The resolved config or an array of diagnostics.
+ */
 export function resolveTSConfig(filePath = 'tsconfig.json', options: Options = {}): LoadedConfig {
   try {
     const configFilePath = findConfigFile(filePath, options);
