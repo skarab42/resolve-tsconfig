@@ -33,7 +33,7 @@ function findFileUp(
 /**
  * The {@link resolveTSConfig} Options.
  */
-export type Options = {
+export type ResolveTSConfigOptions = {
   startDirectory?: string | undefined;
   stopDirectory?: string | undefined;
   startDirectoryShouldExists?: boolean | undefined;
@@ -47,7 +47,7 @@ type NormalizedOptions = {
   startDirectoryShouldExists: boolean | undefined;
 };
 
-function normalizeInput(filePath: string, options: Options): NormalizedOptions | never {
+function normalizeInput(filePath: string, options: ResolveTSConfigOptions): NormalizedOptions | never {
   const absolutePath = normalizePathSeparator(path.resolve(options.startDirectory ?? process.cwd(), filePath));
   const startDirectory = path.dirname(absolutePath);
 
@@ -79,10 +79,10 @@ function normalizeInput(filePath: string, options: Options): NormalizedOptions |
  * Find a config file with some options.
  *
  * @param filePath An absolute or relative file path.
- * @param options See {@link Options}.
+ * @param options See {@link ResolveTSConfigOptions}.
  * @returns The config file path or `undefined`.
  */
-export function findConfigFile(filePath = 'tsconfig.json', options?: Options): string | undefined {
+export function findConfigFile(filePath = 'tsconfig.json', options?: ResolveTSConfigOptions): string | undefined {
   const { fileName, startDirectory, stopDirectory } = normalizeInput(filePath, options ?? {});
 
   return findFileUp(startDirectory, stopDirectory, (directory) => {
@@ -109,7 +109,7 @@ function createDiagnostic(message: DiagnosticMessage): ts.Diagnostic {
   };
 }
 
-type LoadedConfig =
+export type ResolvedTSConfig =
   | { diagnostics: ts.Diagnostic[]; config?: never }
   | { config: ts.ParsedCommandLine; diagnostics?: never };
 
@@ -117,10 +117,10 @@ type LoadedConfig =
  * Find and resolve a tsconfig with some options.
  *
  * @param filePath An absolute or relative file path.
- * @param options See {@link Options}.
+ * @param options See {@link ResolveTSConfigOptions}.
  * @returns The resolved config or an array of diagnostics.
  */
-export function resolveTSConfig(filePath = 'tsconfig.json', options?: Options): LoadedConfig {
+export function resolveTSConfig(filePath = 'tsconfig.json', options?: ResolveTSConfigOptions): ResolvedTSConfig {
   try {
     const configFilePath = findConfigFile(filePath, options);
 
