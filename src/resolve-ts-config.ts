@@ -24,48 +24,40 @@ export type ResolvedTsConfig =
  * @returns The resolved config or an array of diagnostics.
  */
 export function resolveTsConfig(options?: ResolveTsConfigOptions): ResolvedTsConfig {
-  let configFilePath: string | undefined;
+  const filePath = options?.filePath ?? 'tsconfig.json';
+  const { diagnostics, configFilePath } = findConfigFile({ ...options, filePath });
 
-  try {
-    const { filePath, ...restOptions } = options ?? {};
-    const settings = { filePath: filePath ?? 'tsconfig.json', ...restOptions };
-
-    configFilePath = findConfigFile(settings);
-
-    if (!configFilePath) {
-      return {
-        diagnostics: [createDiagnostic({ messageText: `Cannot find a '${settings.filePath}' file.` })],
-      };
-    }
-
-    const jsonText = ts.sys.readFile(configFilePath);
-
-    if (!jsonText) {
-      return {
-        diagnostics: [createDiagnostic({ messageText: `Cannot read '${configFilePath}' file.`, file: configFilePath })],
-      };
-    }
-
-    const configObject = ts.parseConfigFileTextToJson(configFilePath, jsonText);
-
-    if (configObject.error) {
-      return { diagnostics: [configObject.error] };
-    }
-
-    const parsedCommandLine = ts.parseJsonConfigFileContent(
-      configObject.config,
-      ts.sys,
-      path.dirname(configFilePath),
-      undefined,
-      configFilePath,
-    );
-
-    if (parsedCommandLine.errors.length > 0) {
-      return { diagnostics: parsedCommandLine.errors };
-    }
-
-    return { config: parsedCommandLine };
-  } catch (error) {
-    return { diagnostics: [createDiagnostic({ messageText: (error as Error).message, file: configFilePath })] };
+  if (diagnostics) {
+    return { diagnostics };
   }
+
+  const jsonText = ts.sys.readFile(configFilePath);
+
+  if (!jsonText) {
+    return {
+      diagnostics: [
+        createDiagnostic({ code: 5083, file: configFilePath, messageText: `Cannot read file '${configFilePath}'.` }),
+      ],
+    };
+  }
+
+  const configObject = ts.parseConfigFileTextToJson(configFilePath, jsonText);
+
+  if (configObject.error) {
+    return { diagnostics: [configObject.error] };
+  }
+
+  const parsedCommandLine = ts.parseJsonConfigFileContent(
+    configObject.config,
+    ts.sys,
+    path.dirname(configFilePath),
+    undefined,
+    configFilePath,
+  );
+
+  if (parsedCommandLine.errors.length > 0) {
+    return { diagnostics: parsedCommandLine.errors };
+  }
+
+  return { config: parsedCommandLine };
 }

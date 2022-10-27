@@ -24,7 +24,9 @@ it(`should return diagnostics on not found file`, () => {
 
   expect(config).toBeUndefined();
   expect(diagnostics?.[0]?.category).toBe(1);
-  expect(diagnostics?.[0]?.messageText).toBe(`Cannot find a 'test/fixtures/not-exists.json' file.`);
+  expect(diagnostics?.[0]?.messageText).toBe(
+    `Cannot find a 'not-exists.json' file at the current directory: '${cwd}/test/fixtures'.`,
+  );
 });
 
 it(`should return diagnostics on empty file`, () => {
@@ -32,7 +34,7 @@ it(`should return diagnostics on empty file`, () => {
 
   expect(config).toBeUndefined();
   expect(diagnostics?.[0]?.category).toBe(1);
-  expect(diagnostics?.[0]?.messageText).toBe(`Cannot read '${cwd}/test/fixtures/tsconfig.empty.json' file.`);
+  expect(diagnostics?.[0]?.messageText).toBe(`Cannot read file '${cwd}/test/fixtures/tsconfig.empty.json'.`);
   expect(diagnostics?.[0]?.file?.fileName).toBe(`${cwd}/test/fixtures/tsconfig.empty.json`);
 });
 
@@ -45,7 +47,7 @@ it(`should return diagnostics on empty file`, () => {
   expect(config).toBeUndefined();
   expect(diagnostics?.[0]?.category).toBe(1);
   expect(diagnostics?.[0]?.messageText).toBe(
-    `The start directory '${cwd}/deep/path/that/does/not/exists' does not exists but it should because you have set the 'startDirectoryShouldExists' option to true.`,
+    `Directory '${cwd}/deep/path/that/does/not/exists' does not exist, skipping all lookups in it.`,
   );
 });
 
