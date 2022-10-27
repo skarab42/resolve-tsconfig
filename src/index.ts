@@ -31,9 +31,10 @@ function findFileUp(
 }
 
 /**
- * The {@link resolveTSConfig} Options.
+ * The {@link findConfigFile} Options.
  */
-export type ResolveTSConfigOptions = {
+export type FindConfigFileOptions = {
+  filePath: string;
   startDirectory?: string | undefined;
   stopDirectory?: string | undefined;
   startDirectoryShouldExists?: boolean | undefined;
@@ -46,11 +47,11 @@ type NormalizedOptions = {
   startDirectoryShouldExists: boolean | undefined;
 };
 
-function normalizeInput(filePath: string, options: ResolveTSConfigOptions): NormalizedOptions | never {
-  const absolutePath = normalizePathSeparator(path.resolve(options.startDirectory ?? process.cwd(), filePath));
+function normalizeOptions(options: FindConfigFileOptions): NormalizedOptions | never {
+  const absolutePath = normalizePathSeparator(path.resolve(options.startDirectory ?? process.cwd(), options.filePath));
   const startDirectory = path.dirname(absolutePath);
 
-  if (options.startDirectory && path.isAbsolute(filePath)) {
+  if (options.startDirectory && path.isAbsolute(options.filePath)) {
     const providedStartDirectory = normalizePathSeparator(path.resolve(options.startDirectory));
 
     if (startDirectory !== providedStartDirectory) {
@@ -77,12 +78,11 @@ function normalizeInput(filePath: string, options: ResolveTSConfigOptions): Norm
 /**
  * Find a config file with some options.
  *
- * @param filePath An absolute or relative file path.
- * @param options See {@link ResolveTSConfigOptions}.
+ * @param options See {@link FindConfigFileOptions}.
  * @returns The config file path or `undefined`.
  */
-export function findConfigFile(filePath = 'tsconfig.json', options?: ResolveTSConfigOptions): string | undefined {
-  const { fileName, startDirectory, stopDirectory } = normalizeInput(filePath, options ?? {});
+export function findConfigFile(options: FindConfigFileOptions): string | undefined {
+  const { fileName, startDirectory, stopDirectory } = normalizeOptions(options);
 
   return findFileUp(startDirectory, stopDirectory, (directory) => {
     const filePath = `${directory}/${fileName}`;
@@ -108,6 +108,16 @@ function createDiagnostic(message: DiagnosticMessage): ts.Diagnostic {
   };
 }
 
+/**
+ * The {@link resolveTSConfig} Options.
+ */
+export type ResolveTSConfigOptions = {
+  filePath?: string | undefined;
+  startDirectory?: string | undefined;
+  stopDirectory?: string | undefined;
+  startDirectoryShouldExists?: boolean | undefined;
+};
+
 export type ResolvedTSConfig =
   | { diagnostics: ts.Diagnostic[]; config?: never }
   | { config: ts.ParsedCommandLine; diagnostics?: never };
@@ -115,17 +125,19 @@ export type ResolvedTSConfig =
 /**
  * Find and resolve a tsconfig with some options.
  *
- * @param filePath An absolute or relative file path.
  * @param options See {@link ResolveTSConfigOptions}.
  * @returns The resolved config or an array of diagnostics.
  */
-export function resolveTSConfig(filePath = 'tsconfig.json', options?: ResolveTSConfigOptions): ResolvedTSConfig {
+export function resolveTSConfig(options?: ResolveTSConfigOptions): ResolvedTSConfig {
   try {
-    const configFilePath = findConfigFile(filePath, options);
+    const { filePath, ...restOptions } = options ?? {};
+    const settings = { filePath: filePath ?? 'tsconfig.json', ...restOptions };
+
+    const configFilePath = findConfigFile(settings);
 
     if (!configFilePath) {
       return {
-        diagnostics: [createDiagnostic({ message: `Cannot find a '${filePath}' file.` })],
+        diagnostics: [createDiagnostic({ message: `Cannot find a '${settings.filePath}' file.` })],
       };
     }
 
