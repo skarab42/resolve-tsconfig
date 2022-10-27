@@ -11,23 +11,23 @@ pnpm add resolve-tsconfig
 ## Usage
 
 ```ts
-import { resolveTSConfig } from 'resolve-tsconfig';
+import { resolveTsConfig } from 'resolve-tsconfig';
 
-const { config, diagnostics } = resolveTSConfig();
+const { config, diagnostics } = resolveTsConfig();
 ```
 
 ## Signature
 
 ```ts
-function resolveTSConfig(filePath?: string, options?: Options): LoadedConfig;
+function resolveTsConfig(options?: Options): LoadedConfig;
 ```
 
-## Options
+### Options
 
+- **filePath**: `string | undefined` - Default to `tsconfig.json`.
 - **startDirectory**: `string | undefined` - Default to current workind directory.
 - **stopDirectory**: `string | undefined` - Default to root directory.
-- **startDirectoryShouldExists**: `boolean | undefined` - Should raise an error if the start directory does not exist.
-- **compilerOptions**: `ts.CompilerOptions | undefined` - Default compiler options which will be merged with those found.
+- **startDirectoryShouldExists**: `boolean | undefined` - Default to `false`.
 
 ---
 
