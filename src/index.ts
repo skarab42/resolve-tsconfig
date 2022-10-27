@@ -109,26 +109,26 @@ function createDiagnostic(message: DiagnosticMessage): ts.Diagnostic {
 }
 
 /**
- * The {@link resolveTSConfig} Options.
+ * The {@link resolveTsConfig} Options.
  */
-export type ResolveTSConfigOptions = {
+export type ResolveTsConfigOptions = {
   filePath?: string | undefined;
   startDirectory?: string | undefined;
   stopDirectory?: string | undefined;
   startDirectoryShouldExists?: boolean | undefined;
 };
 
-export type ResolvedTSConfig =
+export type ResolvedTsConfig =
   | { diagnostics: ts.Diagnostic[]; config?: never }
   | { config: ts.ParsedCommandLine; diagnostics?: never };
 
 /**
  * Find and resolve a tsconfig with some options.
  *
- * @param options See {@link ResolveTSConfigOptions}.
+ * @param options See {@link ResolveTsConfigOptions}.
  * @returns The resolved config or an array of diagnostics.
  */
-export function resolveTSConfig(options?: ResolveTSConfigOptions): ResolvedTSConfig {
+export function resolveTsConfig(options?: ResolveTsConfigOptions): ResolvedTsConfig {
   try {
     const { filePath, ...restOptions } = options ?? {};
     const settings = { filePath: filePath ?? 'tsconfig.json', ...restOptions };
