@@ -1,6 +1,6 @@
 import ts from 'typescript';
 
-type DiagnosticMessage = {
+export type DiagnosticMessage = {
   message: string;
   code?: number;
   category?: ts.DiagnosticCategory;
