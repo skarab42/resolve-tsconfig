@@ -3,7 +3,7 @@ import { normalizePathSeparator, resolveTsConfig } from '../src/index.js';
 
 const cwd = normalizePathSeparator(process.cwd());
 
-it(`should resolve root config`, () => {
+it('should resolve root config', () => {
   const { config } = resolveTsConfig();
 
   expect(config).toBeDefined();
@@ -19,7 +19,7 @@ it(`should resolve root config`, () => {
   expect((config.raw as Record<string, unknown>)['extends']).toBe('@skarab/typescript-config');
 });
 
-it(`should return diagnostics on not found file`, () => {
+it('should return diagnostics on not found file', () => {
   const { config, diagnostics } = resolveTsConfig({ filePath: 'test/fixtures/not-exists.json' });
 
   expect(config).toBeUndefined();
@@ -29,7 +29,7 @@ it(`should return diagnostics on not found file`, () => {
   );
 });
 
-it(`should return diagnostics on empty file`, () => {
+it('should return diagnostics on empty file', () => {
   const { config, diagnostics } = resolveTsConfig({ filePath: 'test/fixtures/tsconfig.empty.json' });
 
   expect(config).toBeUndefined();
@@ -38,7 +38,7 @@ it(`should return diagnostics on empty file`, () => {
   expect(diagnostics?.[0]?.file?.fileName).toBe(`${cwd}/test/fixtures/tsconfig.empty.json`);
 });
 
-it(`should return diagnostics on empty file`, () => {
+it('should return diagnostics on empty file', () => {
   const { config, diagnostics } = resolveTsConfig({
     filePath: 'deep/path/that/does/not/exists/tsconfig.json',
     startDirectoryShouldExists: true,

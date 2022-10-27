@@ -5,25 +5,25 @@ import { findConfigFile, normalizePathSeparator } from '../src/index.js';
 const cwd = normalizePathSeparator(process.cwd());
 const rootTsConfig = { configFilePath: `${cwd}/tsconfig.json` };
 
-it(`should find relative path`, () => {
+it('should find relative path', () => {
   expect(findConfigFile({ filePath: 'tsconfig.json' })).toStrictEqual(rootTsConfig);
   expect(findConfigFile({ filePath: 'package/tsconfig.json' })).toStrictEqual(rootTsConfig);
   expect(findConfigFile({ filePath: './package/tsconfig.json' })).toStrictEqual(rootTsConfig);
-  expect(findConfigFile({ filePath: 'tsconfig.json', startDirectory: `package` })).toStrictEqual(rootTsConfig);
-  expect(findConfigFile({ filePath: 'tsconfig.json', startDirectory: `./package` })).toStrictEqual(rootTsConfig);
-  expect(findConfigFile({ filePath: './tsconfig.json', startDirectory: `package` })).toStrictEqual(rootTsConfig);
-  expect(findConfigFile({ filePath: './tsconfig.json', startDirectory: `./package` })).toStrictEqual(rootTsConfig);
+  expect(findConfigFile({ filePath: 'tsconfig.json', startDirectory: 'package' })).toStrictEqual(rootTsConfig);
+  expect(findConfigFile({ filePath: 'tsconfig.json', startDirectory: './package' })).toStrictEqual(rootTsConfig);
+  expect(findConfigFile({ filePath: './tsconfig.json', startDirectory: 'package' })).toStrictEqual(rootTsConfig);
+  expect(findConfigFile({ filePath: './tsconfig.json', startDirectory: './package' })).toStrictEqual(rootTsConfig);
 });
 
-it(`should find absolute path`, () => {
+it('should find absolute path', () => {
   const filePath = path.resolve('tsconfig.json');
 
   expect(findConfigFile({ filePath })).toStrictEqual(rootTsConfig);
-  expect(findConfigFile({ filePath, startDirectory: `.` })).toStrictEqual(rootTsConfig);
+  expect(findConfigFile({ filePath, startDirectory: '.' })).toStrictEqual(rootTsConfig);
   expect(findConfigFile({ filePath, startDirectory: cwd })).toStrictEqual(rootTsConfig);
   expect(findConfigFile({ filePath, startDirectory: process.cwd() })).toStrictEqual(rootTsConfig);
 
-  const { diagnostics } = findConfigFile({ filePath, startDirectory: `./package` });
+  const { diagnostics } = findConfigFile({ filePath, startDirectory: './package' });
 
   expect(diagnostics).toStrictEqual([
     {
@@ -37,13 +37,13 @@ it(`should find absolute path`, () => {
   ]);
 });
 
-it(`should find stop directory`, () => {
+it('should find stop directory', () => {
   expect(findConfigFile({ filePath: 'tsconfig.json', stopDirectory: `..` })).toStrictEqual(rootTsConfig);
 
   const { diagnostics } = findConfigFile({
     filePath: 'tsconfig.json',
-    startDirectory: `./package/client`,
-    stopDirectory: `./package`,
+    startDirectory: './package/client',
+    stopDirectory: './package',
   });
 
   expect(diagnostics).toStrictEqual([
@@ -58,7 +58,7 @@ it(`should find stop directory`, () => {
   ]);
 });
 
-it(`should find deep path`, () => {
+it('should find deep path', () => {
   expect(findConfigFile({ filePath: 'deep/path/that/does/not/exists/tsconfig.json' })).toStrictEqual(rootTsConfig);
 
   const { diagnostics } = findConfigFile({ filePath: 'deep/path/that/does/not-exists.json' });
@@ -75,7 +75,7 @@ it(`should find deep path`, () => {
   ]);
 });
 
-it(`should return diagnostic with startDirectoryShouldExists to true`, () => {
+it('should return diagnostic with startDirectoryShouldExists to true', () => {
   const { diagnostics } = findConfigFile({
     filePath: 'deep/path/that/does/not/exists/tsconfig.json',
     startDirectoryShouldExists: true,

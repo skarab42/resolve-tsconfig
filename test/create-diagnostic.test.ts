@@ -2,7 +2,7 @@ import ts from 'typescript';
 import { expect, it } from 'vitest';
 import { createDiagnostic } from '../src/create-diagnostic.js';
 
-it(`should find relative path`, () => {
+it('should find relative path', () => {
   expect(createDiagnostic({ messageText: 'life' })).toMatchInlineSnapshot(`
     {
       "category": 1,
