@@ -36,4 +36,52 @@ it('should find relative path', () => {
         "start": undefined,
       }
     `);
+
+  expect(createDiagnostic({ messageText: 'life', file: 'not-exists.json' })).toMatchInlineSnapshot(`
+    {
+      "category": 1,
+      "code": -0,
+      "file": SourceFileObject {
+        "amdDependencies": [],
+        "bindDiagnostics": [],
+        "bindSuggestionDiagnostics": undefined,
+        "end": 0,
+        "endOfFileToken": TokenObject {
+          "end": 0,
+          "flags": 67371008,
+          "kind": 1,
+          "modifierFlagsCache": 0,
+          "parent": undefined,
+          "pos": 0,
+          "transformFlags": 0,
+        },
+        "fileName": "not-exists.json",
+        "flags": 67371008,
+        "hasNoDefaultLib": false,
+        "identifierCount": 0,
+        "identifiers": Map {},
+        "isDeclarationFile": false,
+        "kind": 305,
+        "languageVariant": 1,
+        "languageVersion": 2,
+        "libReferenceDirectives": [],
+        "modifierFlagsCache": 0,
+        "nodeCount": 2,
+        "parent": undefined,
+        "parseDiagnostics": [],
+        "pos": 0,
+        "pragmas": Map {},
+        "referencedFiles": [],
+        "scriptKind": 6,
+        "setExternalModuleIndicator": [Function],
+        "statements": [],
+        "text": "",
+        "transformFlags": 0,
+        "typeReferenceDirectives": [],
+      },
+      "length": undefined,
+      "messageText": "life",
+      "start": undefined,
+    }
+  `);
 });
