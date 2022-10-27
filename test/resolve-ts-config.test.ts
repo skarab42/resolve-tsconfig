@@ -33,6 +33,7 @@ it(`should return diagnostics on empty file`, () => {
   expect(config).toBeUndefined();
   expect(diagnostics?.[0]?.category).toBe(1);
   expect(diagnostics?.[0]?.messageText).toBe(`Cannot read '${cwd}/test/fixtures/tsconfig.empty.json' file.`);
+  expect(diagnostics?.[0]?.file?.fileName).toBe(`${cwd}/test/fixtures/tsconfig.empty.json`);
 });
 
 it(`should return diagnostics on empty file`, () => {

@@ -3,7 +3,7 @@ import { expect, it } from 'vitest';
 import { createDiagnostic } from '../src/create-diagnostic.js';
 
 it(`should find relative path`, () => {
-  expect(createDiagnostic({ message: 'life' })).toMatchInlineSnapshot(`
+  expect(createDiagnostic({ messageText: 'life' })).toMatchInlineSnapshot(`
     {
       "category": 1,
       "code": -0,
@@ -14,7 +14,7 @@ it(`should find relative path`, () => {
     }
   `);
 
-  expect(createDiagnostic({ message: 'life', code: 42 })).toMatchInlineSnapshot(`
+  expect(createDiagnostic({ messageText: 'life', code: 42 })).toMatchInlineSnapshot(`
     {
       "category": 1,
       "code": 42,
@@ -25,7 +25,7 @@ it(`should find relative path`, () => {
     }
   `);
 
-  expect(createDiagnostic({ message: 'life', code: 42, category: ts.DiagnosticCategory.Warning }))
+  expect(createDiagnostic({ messageText: 'life', code: 42, category: ts.DiagnosticCategory.Warning }))
     .toMatchInlineSnapshot(`
       {
         "category": 0,

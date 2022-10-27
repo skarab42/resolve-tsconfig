@@ -24,15 +24,17 @@ export type ResolvedTsConfig =
  * @returns The resolved config or an array of diagnostics.
  */
 export function resolveTsConfig(options?: ResolveTsConfigOptions): ResolvedTsConfig {
+  let configFilePath: string | undefined;
+
   try {
     const { filePath, ...restOptions } = options ?? {};
     const settings = { filePath: filePath ?? 'tsconfig.json', ...restOptions };
 
-    const configFilePath = findConfigFile(settings);
+    configFilePath = findConfigFile(settings);
 
     if (!configFilePath) {
       return {
-        diagnostics: [createDiagnostic({ message: `Cannot find a '${settings.filePath}' file.` })],
+        diagnostics: [createDiagnostic({ messageText: `Cannot find a '${settings.filePath}' file.` })],
       };
     }
 
@@ -40,7 +42,7 @@ export function resolveTsConfig(options?: ResolveTsConfigOptions): ResolvedTsCon
 
     if (!jsonText) {
       return {
-        diagnostics: [createDiagnostic({ message: `Cannot read '${configFilePath}' file.` })],
+        diagnostics: [createDiagnostic({ messageText: `Cannot read '${configFilePath}' file.`, file: configFilePath })],
       };
     }
 
@@ -64,6 +66,6 @@ export function resolveTsConfig(options?: ResolveTsConfigOptions): ResolvedTsCon
 
     return { config: parsedCommandLine };
   } catch (error) {
-    return { diagnostics: [createDiagnostic({ message: (error as Error).message })] };
+    return { diagnostics: [createDiagnostic({ messageText: (error as Error).message, file: configFilePath })] };
   }
 }
