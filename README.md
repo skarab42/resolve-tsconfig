@@ -19,7 +19,7 @@ const { config, diagnostics } = resolveTsConfig();
 ## Signature
 
 ```ts
-function resolveTsConfig(options?: Options): LoadedConfig;
+function resolveTsConfig(options?: ResolveTsConfigOptions): ResolvedTsConfig;
 ```
 
 ### Options
@@ -28,6 +28,14 @@ function resolveTsConfig(options?: Options): LoadedConfig;
 - **startDirectory**: `string | undefined` - Default to current workind directory.
 - **stopDirectory**: `string | undefined` - Default to root directory.
 - **startDirectoryShouldExists**: `boolean | undefined` - Default to `false`.
+
+### Return
+
+```ts
+type ResolvedTsConfig =
+  | { diagnostics: ts.Diagnostic[]; config?: never }
+  | { config: ts.ParsedCommandLine; diagnostics?: never };
+```
 
 ---
 
