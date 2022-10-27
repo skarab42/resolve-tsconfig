@@ -37,7 +37,6 @@ export type ResolveTSConfigOptions = {
   startDirectory?: string | undefined;
   stopDirectory?: string | undefined;
   startDirectoryShouldExists?: boolean | undefined;
-  compilerOptions?: ts.CompilerOptions | undefined;
 };
 
 type NormalizedOptions = {
@@ -148,7 +147,7 @@ export function resolveTSConfig(filePath = 'tsconfig.json', options?: ResolveTSC
       configObject.config,
       ts.sys,
       path.dirname(configFilePath),
-      options?.compilerOptions,
+      undefined,
       configFilePath,
     );
 
