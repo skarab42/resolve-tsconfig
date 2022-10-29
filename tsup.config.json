@@ -1,6 +1,6 @@
 {
   "tsconfig": "./tsconfig.build.json",
-  "entry": ["src/index.ts"],
+  "entry": ["./src/index.ts"],
   "format": ["esm", "cjs"],
   "platform": "node",
   "outDir": "lib",

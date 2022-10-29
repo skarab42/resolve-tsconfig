@@ -1,4 +1,5 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["lib", "coverage", "test"]
+  "include": ["src", "test"],
+  "exclude": ["test/fixtures"]
 }
