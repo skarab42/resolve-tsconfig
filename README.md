@@ -25,7 +25,7 @@ function resolveTsConfig(options?: ResolveTsConfigOptions): ResolvedTsConfig;
 ### Options
 
 - **filePath**: `string | undefined` - Default to `tsconfig.json`.
-- **startDirectory**: `string | undefined` - Default to current workind directory.
+- **startDirectory**: `string | undefined` - Default to current working directory.
 - **stopDirectory**: `string | undefined` - Default to root directory.
 - **startDirectoryShouldExists**: `boolean | undefined` - Default to `false`.
 
